@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meridian | Executive dashboard</title>
+<style>
+:root{--bg:#070d17;--panel:#0e1726;--panel2:#111c2e;--line:#22314a;--gold:#e6c07b;--gold2:#d9a956;--green:#9be3c0;--orange:#f2b48a;--txt:#e9eef6;--mut:#9aa8bd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 600px at 20% 0,#0f1c30,transparent),var(--bg);color:var(--txt);font-family:"Noto Sans","Segoe UI",system-ui,sans-serif;font-size:13px}
+.wrap{padding:14px 20px 20px}
+header{display:flex;align-items:center;gap:20px;margin-bottom:14px}
+.logo{display:flex;align-items:center;gap:12px}.dia{width:20px;height:20px;background:linear-gradient(135deg,#f0d49a,#b8873f);transform:rotate(45deg);border-radius:3px}
+.logo b{font-size:20px;letter-spacing:2px;font-weight:600}.logo small{display:block;color:var(--mut);font-size:12px}
+.ctx{flex:1}.ctx b{font-size:13px}.ctx div{color:var(--mut);font-size:12px;margin-top:2px}
+.compile{border:1px solid #5a4a2a;background:#141b26;border-radius:8px;padding:8px 14px;text-align:right;width:330px;cursor:pointer}
+.compile .k{font-size:10px;letter-spacing:2px;color:var(--mut)}.compile .v{font-size:22px;font-weight:700;letter-spacing:2px;color:var(--gold)}.compile .d{font-size:11px;color:var(--mut)}
+.compile.clear .v{color:var(--green)}
+.btn{background:linear-gradient(180deg,#f0c97f,#d9a956);color:#1a1205;border:0;border-radius:10px;padding:12px 16px;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tile{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-height:150px;cursor:pointer;transition:.15s}
+.tile:hover{border-color:var(--gold2);transform:translateY(-2px);box-shadow:0 6px 24px #0008}
+.tile .k{font-size:11px;letter-spacing:1.5px;color:var(--mut);text-transform:uppercase}
+.tile .v{font-size:44px;font-weight:700;margin:6px 0 2px;letter-spacing:.5px}
+.tile .s{font-size:13px}.tile .m{font-size:11px;color:var(--mut);margin-top:6px}
+.gold{color:var(--gold)}.green{color:var(--green)}.orange{color:var(--orange)}
+.tip{position:absolute;left:16px;top:100%;margin-top:6px;z-index:5;background:#1b2840;border:1px solid var(--gold2);padding:8px 10px;border-radius:6px;font-size:12px;width:320px;display:none}
+.tile:hover .tip{display:block}
+.decision{display:flex;align-items:center;gap:24px;margin:12px 0;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:12px 16px}
+.decision .lab{width:110px;font-size:11px;color:var(--mut)}.decision .lab b{color:var(--gold);letter-spacing:1.5px;display:block;font-size:11px}
+.decision h2{flex:1;margin:0;font-size:22px;font-weight:700}
+.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px}.ghost:hover{border-color:var(--gold)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{max-height:470px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.h{font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px}
+.months{display:flex;gap:30px;align-items:flex-end;height:120px;padding:0 20px}
+.mo{flex:1;text-align:center;cursor:pointer}.bar{border-radius:3px 3px 0 0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;height:100px;background:#1a2638}
+.bar .a{background:var(--gold)}.bar .b{background:var(--green)}.mo span{font-size:10px;color:var(--mut)}.mo.on .bar{outline:2px solid var(--gold)}.mo:hover .bar{filter:brightness(1.15)}
+.note{color:var(--mut);font-size:12px;margin:10px 0}
+.cat{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;padding:3px 0;cursor:pointer}.cat:hover{color:var(--gold)}
+.track{height:6px;background:#1c2a3e;border-radius:4px}.fill{height:6px;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--green))}.cat .amt{text-align:right}
+.seg{display:flex;gap:6px;margin:6px 0 10px}.seg button{background:#16233a;border:1px solid var(--line);color:var(--txt);border-radius:14px;padding:5px 12px;cursor:pointer}.seg button.on{border-color:var(--gold);color:var(--gold)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:8px;font-size:11px;min-height:74px;cursor:pointer;position:relative}.card:hover{border-color:var(--gold2)}
+.card b{display:block;margin-bottom:4px}.card .st{font-weight:700;word-break:break-all;margin-bottom:3px}.card .d{color:var(--mut)}
+.sub{font-size:11px;letter-spacing:1.5px;color:var(--gold);margin:8px 0}
+.modalbg{position:fixed;inset:0;background:#000b;display:none;align-items:flex-start;justify-content:center;padding-top:56px;z-index:20}.modalbg.on{display:flex}
+.modal{width:1440px;max-width:96vw;max-height:84vh;overflow:auto;background:#0b1422;border:1px solid var(--line);border-radius:12px;padding:16px 16px}
+.modal .top{display:flex;justify-content:space-between;align-items:flex-start}.modal .kk{font-size:11px;letter-spacing:1px;color:var(--mut)}.modal h3{margin:4px 0 10px;font-size:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.chips button{background:transparent;color:var(--txt);border:1px solid var(--line);border-radius:16px;padding:7px 12px;cursor:pointer;font-size:13px}.chips button.on{border-color:var(--txt);background:#16233a}.chips button:hover{border-color:var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:12px}th{background:#16233a;text-align:left;padding:8px;color:var(--gold);font-size:11px}td{padding:8px;border-bottom:1px solid #1a273b;vertical-align:top}tr.grp td{background:#16233a;font-weight:700}tbody tr:hover td{background:#132036}
+.kv{display:grid;grid-template-columns:220px 1fr;gap:8px 16px;font-size:14px}.kv div:nth-child(odd){color:var(--mut)}
+</style></head><body><div class="wrap">
+<header><div class="logo"><div class="dia"></div><div><b>Meridian</b><small>Executive dashboard</small></div></div>
+<div class="ctx"><b>ABC Company · Plan 501 · Seed 501 · 5,000 employees · 15,500 covered lives · United States domestic</b><div>modeled on synthetic data</div></div>
+<div class="compile" id="compile" title="Click to view compile detail"><div class="k">LIVE COMPILE</div><div class="v" id="cv">HOLD</div><div class="d" id="cd">Compiler COLLISIONS_DETECTED · exit 1 · 5 open · 5 pending sign offs. Hygiene gate clean.</div></div>
+<button class="btn" id="run">Run live compile</button></header>
+<div class="tiles">
+<div class="tile" data-d="cost"><div class="k">Total benefit cost</div><div class="v gold">$87,480,000.00</div><div class="s">Total modeled spend · $17,496.00/EE</div><div class="m">modeled on synthetic data · as of 2026 · total modeled spend · plan 501 · seed 501</div><div class="tip">Click for cost drill down. 5,000 EEs, 15,500 covered lives. Modeled.</div></div>
+<div class="tile" data-d="fte"><div class="k">FTE capacity release</div><div class="v green">3.0 to 5.4 FTE</div><div class="s">Low 3.0 to 5.4 FTE. Medium 2.0 to 3.3 FTE. High 1.0 to 2.0 FTE.</div><div class="m">modeled on synthetic data · as of 2026 · illustrative modeled capacity to redeploy · plan 501 · seed 501</div><div class="tip">Click for FTE scenarios. Illustrative modeled capacity.</div></div>
+<div class="tile" data-d="q:all"><div class="k">Dollars at risk</div><div class="v gold">$598,500.00</div><div class="s">Annualized absolute</div><div class="m">modeled on synthetic data · as of 2026-06-01 · modeled premium impact · plan 501 · seed 501</div><div class="tip">Click to open all 118 work items. Recovered plus exposure.</div></div>
+<div class="tile" data-d="q:rec"><div class="k">Dollars recovered</div><div class="v green">$262,800.00</div><div class="s">Annualized recoverable overpayment</div><div class="m">modeled on synthetic data · as of 2026-06-01 · modeled premium impact · plan 501 · seed 501</div><div class="tip">Click to open recoverable items.</div></div>
+<div class="tile" data-d="q:exp"><div class="k">Uncovered exposure</div><div class="v orange">$335,700.00</div><div class="s">Annualized uncovered exposure</div><div class="m">modeled on synthetic data · as of 2026-06-01 · modeled premium impact · plan 501 · seed 501</div><div class="tip">Click to open exposure items.</div></div>
+<div class="tile" data-d="q:all"><div class="k">834 mismatches</div><div class="v gold">118</div><div class="s">Open work items</div><div class="m">modeled on synthetic data · as of 2026-06-01 · modeled premium impact · plan 501 · seed 501</div><div class="tip">Click to open the admin work queue.</div></div>
+</div>
+<div class="decision"><div class="lab"><b>THE ONE DECISION</b>modeled on synthetic data · as of 2026-06-01 · modeled premium impact · plan 501 · seed 501</div>
+<h2>Approve recovery of $262,800.00 recoverable overpayment and close $335,700.00 uncovered exposure.</h2><button class="ghost" data-d="q:all">Open the work queue</button></div>
+<div class="row">
+<div class="panel"><div class="h">MONTHLY RUN RATE THROUGH VALUATION</div><div class="months" id="months"></div>
+<div class="note" id="mnote"></div><div id="cats"></div></div>
+<div class="panel"><div class="h">COMPLIANCE AND FILING</div><div class="note" style="margin-top:0">Statuses are the deterministic checks. modeled on synthetic data · checked 2026-10-01T16:00:00Z</div>
+<div class="seg" id="cseg"><button data-g="all" class="on">All</button><button data-g="policy">Policy checks</button><button data-g="privacy">Privacy and audit</button></div><div id="checks"></div></div>
+</div></div>
+<div class="modalbg" id="mbg"><div class="modal"><div class="top"><div><div class="kk" id="mk">MODELED ON SYNTHETIC DATA · AS OF 2026-06-01 · US BENEFITS DELIVERY</div><h3 id="mt"></h3></div><button class="ghost" id="close">Close</button></div><div id="mb"></div></div></div>
+<script>
+const CATS=[["missed_add","Missed add",15,93600,"exp","not_sent_on_834"],["missed_term","Missed term",25,195000,"rec","term_not_sent_on_834"],["not_applied","834 not applied",10,78000,"rec","sent_not_applied"],["tier_mismatch","Tier mismatch",28,218400,"exp","tier_mismatch"],["effective_date","Effective date",15,0,"exp","effective_date_mismatch"],["missing_dependent","Missing dependent",15,8100,"exp","missing_dependent"],["extra_dependent","Extra dependent",10,5400,"exp","extra_dependent"]];
+const POLS=[["P-01","POLICY_BLOCKED","Health factor red line","policy"],["P-02","POLICY_BLOCKED","Genetic and family history red line","policy"],["P-03","POLICY_BLOCKED","Employer aggregates only","policy"],["P-04","AGENT_NOT_VERIFIED","Unverified agents stay off PHI tools","policy"],["P-05","DEFERRED","Claims list step up","policy"],["P-06","REJECTED","Numeric verifier","policy"],["P-07","","Conflict decline","policy"],["P-08","alphabetical","No vendor ranking","policy"],["P-09","FEATURE_NOT_AVAILABLE_IN_PHASE","Election write path","policy"],["P-10","0 matched","No export, email, upload, or send tool","policy"],["PROV-SPD-5.14","ambiguous","Ambiguous provision · as of 2026-01-01","policy"],["GINA","applied","GINA pre ingestion guard","privacy"],["FR-17-adult","DEPENDENT_AUTHORIZATION_REQUIRED","Adult dependent privacy","privacy"],["FR-17-minor","MINOR_DEPENDENT","Minor dependent rule","privacy"],["H-03","active","Consent ledger","privacy"]];
+const MON=[["Jan 2026",.35,.1],["Feb 2026",.55,.25],["Mar 2026",.6,.25],["Apr 2026",1,.4],["May 2026",1,.4],["Jun 2026",1,.4]];
+const $=s=>document.querySelector(s),f=n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:2});
+let month=5,filt="all";
+function months(){$("#months").innerHTML=MON.map((m,i)=>`<div class="mo ${i==month?"on":""}" data-i="${i}" title="${m[0]}: bar heights modeled (not itemized in source)"><div class="bar"><div class="a" style="height:${(m[1]-m[2])*100}%"></div><div class="b" style="height:${m[2]*100}%"></div></div><span>${m[0]}</span></div>`).join("");
+$("#mnote").textContent=(month==5?"Valuation month run rate $49,875.00. ":MON[month][0]+" selected: monthly amount not itemized in source (modeled shape). Valuation month run rate $49,875.00. ")+"118 open, 115 priced, 3 unpriced. Net is recoverable overpayment minus uncovered exposure. All amounts are modeled premium impact. modeled on synthetic data · as of 2026-06-01 · modeled premium impact · plan 501 · seed 501";
+document.querySelectorAll(".mo").forEach(e=>e.onclick=()=>{month=+e.dataset.i;months()})}
+$("#cats").innerHTML=CATS.map(c=>`<div class="cat" data-d="q:${c[0]}" title="Click to open ${c[1]} in the work queue"><div>${c[1]} (${c[2]})</div><div class="track"><div class="fill" style="width:${c[3]/218400*100}%"></div></div><div class="amt">${f(c[3])}</div></div>`).join("");
+function grp(g){return `<div class="sub">${g=="policy"?"POLICY CHECKS":"PRIVACY AND AUDIT"}</div><div class="grid4">`+POLS.filter(p=>p[3]==g).map(p=>`<div class="card" data-d="c:${p[0]}" title="${p[0]}: ${p[2]}"><b>${p[0]}</b><div class="st">${p[1]}</div><div class="d">${p[2]} · as of 2026-10-01T16:00:00Z</div></div>`).join("")+"</div>"}
+function checks(g){$("#checks").innerHTML=(g=="all"?["policy","privacy"]:[g]).map(grp).join("");bind()}
+document.querySelectorAll("#cseg button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cseg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");checks(b.dataset.g)});
+function rows(){const sel=CATS.filter(c=>filt=="all"||c[0]==filt||c[4]==filt);let h="<table><thead><tr><th>Category</th><th>Status</th><th>Owner</th><th>Citation</th><th>As of</th><th>Annualized</th><th>Id</th></tr></thead><tbody>";let n=0;
+sel.forEach(c=>{h+=`<tr class="grp"><td colspan="7">${c[1]} · ${c[0]} · ${c[2]} items · ${f(c[3])} annualized (${c[4]=="rec"?"recoverable":"exposure"}, modeled split)</td></tr>`;const each=c[3]/c[2];for(let i=0;i<c[2];i++){n++;const id=String(26+i).padStart(6,"0");h+=`<tr><td>${c[5]}</td><td>OPEN</td><td>US Benefits Delivery</td><td>834 reconciliation | ${c[0]} | ${c[5]} | MED-PPO | modeled premium impact | hris 2026-06-02T12:00:00Z</td><td>2026-06-01</td><td>${f(each)}</td><td>${c[0]}:E${id}:SELF:MED-PPO</td></tr>`}});
+const tot=sel.reduce((a,c)=>a+c[3],0);$("#mt").textContent="Admin work queue · "+n+" open · "+f(tot);
+return h+"</tbody></table><div class='note'>Per item amounts are the category total divided evenly across items (modeled). Item ids are synthetic.</div>"}
+function chips(){const L=[["all","All 118"]].concat(CATS.map(c=>[c[0],c[1]+" "+c[2]])).concat([["rec","Recoverable"],["exp","Exposure"]]);return `<div class="chips">${L.map(l=>`<button data-f="${l[0]}" class="${l[0]==filt?"on":""}">${l[1]}</button>`).join("")}</div>`}
+function queue(){$("#mb").innerHTML=chips()+rows();document.querySelectorAll(".chips button").forEach(b=>b.onclick=()=>{filt=b.dataset.f;queue()})}
+function open(d){$("#mk").textContent="MODELED ON SYNTHETIC DATA · AS OF 2026-06-01 · US BENEFITS DELIVERY";
+if(d.startsWith("q:")){filt=d.slice(2);queue()}
+else if(d=="cost"){$("#mt").textContent="Total benefit cost · $87,480,000.00";$("#mb").innerHTML=`<div class="kv"><div>Total modeled spend</div><div>$87,480,000.00</div><div>Per employee</div><div>$17,496.00/EE at 5,000 employees</div><div>Per covered life</div><div>About $5,644 at 15,500 covered lives (derived, modeled)</div><div>Dollars at risk share</div><div>$598,500.00, about 0.68% of total (derived, modeled)</div><div>Basis</div><div>modeled on synthetic data · as of 2026 · total modeled spend · plan 501 · seed 501</div></div>`}
+else if(d=="fte"){$("#mt").textContent="FTE capacity release · 3.0 to 5.4 FTE";$("#mb").innerHTML=`<table><thead><tr><th>Scenario</th><th>FTE released (modeled)</th><th>Basis</th></tr></thead><tbody><tr><td>Low</td><td>3.0 to 5.4 FTE</td><td>As printed on the source tile</td></tr><tr><td>Medium</td><td>2.0 to 3.3 FTE</td><td>As printed on the source tile</td></tr><tr><td>High</td><td>1.0 to 2.0 FTE</td><td>As printed on the source tile</td></tr></tbody></table><div class="note">Illustrative modeled capacity to redeploy · as of 2026 · plan 501 · seed 501</div>`}
+else if(d.startsWith("c:")){const p=POLS.find(x=>x[0]==d.slice(2));$("#mk").textContent="MODELED ON SYNTHETIC DATA · CHECKED 2026-10-01T16:00:00Z · COMPLIANCE AND FILING";$("#mt").textContent=p[0]+" · "+(p[1]||"status not shown in source");$("#mb").innerHTML=`<div class="kv"><div>Check</div><div>${p[0]}</div><div>Status</div><div>${p[1]||"not shown in source"}</div><div>Rule</div><div>${p[2]}</div><div>Group</div><div>${p[3]=="policy"?"Policy checks":"Privacy and audit"}</div><div>Checked</div><div>2026-10-01T16:00:00Z</div></div>`}
+else if(d=="compile"){$("#mt").textContent="Live compile · "+$("#cv").textContent;$("#mb").innerHTML=`<div class="kv"><div>Status</div><div>${$("#cv").textContent}</div><div>Detail</div><div>${$("#cd").textContent}</div></div>`}
+$("#mbg").classList.add("on")}
+function bind(){document.querySelectorAll("[data-d]").forEach(e=>e.onclick=()=>open(e.dataset.d))}
+$("#compile").dataset.d="compile";
+$("#close").onclick=()=>$("#mbg").classList.remove("on");$("#mbg").onclick=e=>{if(e.target.id=="mbg")$("#mbg").classList.remove("on")};document.onkeydown=e=>{if(e.key=="Escape")$("#mbg").classList.remove("on")};
+let ran=false;$("#run").onclick=()=>{ran=!ran;$("#run").textContent=ran?"Compiling...":"Run live compile";setTimeout(()=>{$("#run").textContent="Run live compile";$("#cv").textContent="HOLD";$("#cd").textContent="Compiler COLLISIONS_DETECTED · exit 1 · 5 open · 5 pending sign offs. Hygiene gate clean. Rerun "+new Date().toLocaleTimeString()+" (modeled)";ran=false},900)};
+months();checks("all");bind();
+</script></body></html>
