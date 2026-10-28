@@ -55,8 +55,8 @@ table{width:100%;border-collapse:collapse;font-size:12px}th{background:#16233a;t
 </style></head><body><div class="wrap">
 <header><div class="logo"><div class="dia"></div><div><b>Meridian</b><small>v4.8 · Executive dashboard</small></div></div>
 <div class="ctx"><b>ABC Company (synthetic) · 5,000 employees · 15,500 lives · U.S. domestic</b><div>Plan 501 · Seed 501 · modeled on synthetic data</div></div>
-<div class="compile" id="compile" title="Click to view compile detail"><div class="k">LIVE COMPILE</div><div class="v" id="cv">HOLD</div><div class="d" id="cd">Compiler COLLISIONS_DETECTED · exit 1 · 5 open · 5 pending sign offs. Hygiene gate clean.</div></div>
-<button class="btn" id="run">Run live compile</button></header>
+<div class="compile" id="compile" title="Click to view compile detail"><div class="k">Compile status (synthetic)</div><div class="v" id="cv">HOLD</div><div class="d" id="cd">Compiler COLLISIONS_DETECTED · exit 1 · 5 open · 5 pending sign offs. Hygiene gate clean.</div></div>
+<button class="btn" id="run">Show compile status</button></header>
 <div class="kpis">
 <div class="kpi"><div class="k">Day-1 total</div><div class="v gold">$1,767,645/yr</div><div class="s">$354/EE · 6.9x on $255K max fee</div><div class="m">MODELED</div></div>
 <div class="kpi"><div class="k">Claims and vendor gate</div><div class="v gold">$972,645/yr</div><div class="s">$195/EE</div><div class="m">MODELED</div></div>
@@ -108,6 +108,6 @@ $("#mbg").classList.add("on")}
 function bind(){document.querySelectorAll("[data-d]").forEach(e=>e.onclick=()=>open(e.dataset.d))}
 $("#compile").dataset.d="compile";
 $("#close").onclick=()=>$("#mbg").classList.remove("on");$("#mbg").onclick=e=>{if(e.target.id=="mbg")$("#mbg").classList.remove("on")};document.onkeydown=e=>{if(e.key=="Escape")$("#mbg").classList.remove("on")};
-let ran=false;$("#run").onclick=()=>{ran=!ran;$("#run").textContent=ran?"Compiling...":"Run live compile";setTimeout(()=>{$("#run").textContent="Run live compile";$("#cv").textContent="HOLD";$("#cd").textContent="Compiler COLLISIONS_DETECTED · exit 1 · 5 open · 5 pending sign offs. Hygiene gate clean. Rerun "+new Date().toLocaleTimeString()+" (modeled)";ran=false},900)};
+let ran=false;$("#run").onclick=()=>{ran=!ran;$("#run").textContent=ran?"Compiling...":"Show compile status";setTimeout(()=>{$("#run").textContent="Show compile status";$("#cv").textContent="HOLD";$("#cd").textContent="Compiler COLLISIONS_DETECTED · exit 1 · 5 open · 5 pending sign offs. Hygiene gate clean. Rerun "+new Date().toLocaleTimeString()+" (modeled)";ran=false},900)};
 months();checks("all");bind();
 </script></body></html>
